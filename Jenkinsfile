@@ -24,7 +24,7 @@ pipeline{
 
         stage('Checkout from GIT'){
             steps{
-                git branch: 'main', url: 'https://github.com/M-Amruta-14/a-reddit-clone.git'
+                git branch: 'main', url: 'https://github.com/M-Amruta-14/Reddit-clone-resources.git'
             }
         }
  
