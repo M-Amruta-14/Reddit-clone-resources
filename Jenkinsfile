@@ -71,14 +71,14 @@ pipeline{
             }
         }
 
-         stage('Trivy Iamge Scan'){
+        stage('Trivy Iamge Scan'){
             steps{
                 script{
                     sh ('docker run -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image amruta031/reddit-clone-pipeline:latest --no-progress --scanners vuln  --exit-code 0 --severity HIGH,CRITICAL --format table > trivyimage.txt')
                 }
             }
         }
-        
+
         stage('Cleanup Artifacts'){
             steps{
                 script{
@@ -86,6 +86,26 @@ pipeline{
                     sh "docker rmi ${IMAGE_NAME}:latest"
                 }
             }
+        }
+
+ /*       stage('Trigger CD Pipeline'){
+            steps{
+                script{
+                    sh "curl -v -k --user clouduser:${JENKINS_API_TOKEN} -X POST -H 'cache-control: no-cache' -H 'content-type: application/x-www-form-urlencoded' --data 'IMAGE_TAG=${IMAGE_TAG}' 'ec2-65-2-187-142.ap-south-1.compute.amazonaws.com:8080/job/Reddit-Clone-CD/buildWithParameters?token=gitops-token'"
+                }
+            }
+        }*/
+    }
+
+    post{
+        always{
+            emailext attachLog: true,
+            subject: "'${currerntBuild.result}'",
+            body: "Project: ${env.JOB_NAME}<br/>" +
+                "Build Number: ${env.BUILD_NUMBER}<br/>" +
+                "URL: ${env.BUILD_URL}<br/>",
+            to: 'moreamruta849@gmail.com',
+            attachmentsPattern: 'trivyfs.txt,trivyimage.txt'
         }
     }
 }
