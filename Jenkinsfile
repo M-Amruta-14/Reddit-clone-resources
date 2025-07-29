@@ -10,7 +10,7 @@ pipeline{
         APP_NAME = "reddit-clone-pipeline"
         RELEASE = "1.0.0"
         DOCKER_USER = "amruta031"
-        DOCKER_PASS = 'dockerhub'
+        DOCKER_PASS = 'DockerHub'
         IMAGE_NAME = "${DOCKER_USER}" + "/" + "${APP_NAME}"
         IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
     }
@@ -65,7 +65,7 @@ pipeline{
                     }
                     docker.withRegistry('',DOCKER_PASS){
                         docker_image.push("${IMAGE_TAG}")
-                        docker_image.PUSH('latest')
+                        docker_image.push('latest')
                     }
                 }
             }
