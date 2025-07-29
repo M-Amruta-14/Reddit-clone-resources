@@ -1,11 +1,11 @@
 pipeline{
-    agent any
+    aganet any
     tools{
         jdk 'jdk17'
         nodejs 'node16'
     }
 
-    environment{
+    enviroment{
         SCANNER_HOME = tool 'sonar-scanner'
         APP_NAME = "reddit-clone-pipeline"
         RELEASE = "1.0.0"
@@ -54,6 +54,20 @@ pipeline{
         stage('TRIVY FS SCAN'){
             steps{
                 sh "trivy fs . > trivyfs.txt"
+            }
+        }
+
+        stage('Build & push docker image'){
+            steps{
+                script{
+                    docker.withRegistry('',DOCKER_PASS){
+                        docker_image = docker.build "${IMAGE_NAME}"
+                    }
+                    docker.withRegistry('',DOCKER_PASS){
+                        docker_image.push("${IMAGE_TAG}")
+                        docker_image.PUSH('latest')
+                    }
+                }
             }
         }
     }
