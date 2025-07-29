@@ -1,11 +1,11 @@
 pipeline{
-    aganet any
+    agent any
     tools{
         jdk 'jdk17'
         nodejs 'node16'
     }
 
-    enviroment{
+    environment{
         SCANNER_HOME = tool 'sonar-scanner'
         APP_NAME = "reddit-clone-pipeline"
         RELEASE = "1.0.0"
